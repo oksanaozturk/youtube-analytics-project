@@ -36,9 +36,9 @@ class Channel:
         self.video_count: int = int(self.info_channel['items'][0]['statistics']['videoCount'])
         self.total_views: int = int(self.info_channel['items'][0]['statistics']['viewCount'])
 
-    # @property
-    # def channel_id(self):
-    #     return self.__channel_id
+    @property
+    def channel_id(self):
+        return self.__channel_id
 
     @classmethod
     def dict_channel(cls, channel_id: str) -> dict:
