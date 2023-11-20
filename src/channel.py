@@ -36,6 +36,38 @@ class Channel:
         self.video_count: int = int(self.info_channel['items'][0]['statistics']['videoCount'])
         self.total_views: int = int(self.info_channel['items'][0]['statistics']['viewCount'])
 
+    def __str__(self):
+        """Возвращает название и ссылку на канал по шаблону"""
+        return f"'{self.title} ({self.url})'"
+
+    def __add__(self, other):
+        """Складывает количество подписчиков двух каналов"""
+        return self.subscribers_count + other.subscribers_count
+
+    def __sub__(self, other):
+        """Вычитает количество подписчиков у двух каналов"""
+        return self.subscribers_count - other.subscribers_count
+
+    def __gt__(self, other):
+        """Сравнивает на каком канале большее количество подписчиков"""
+        return self.subscribers_count > other.subscribers_count
+
+    def __ge__(self, other):
+        """Сравнивает «больше или равно»"""
+        return self.subscribers_count >= other.subscribers_count
+
+    def __lt__(self, other):
+        """Сравнивает на каком канале меньшее количество подписчиков"""
+        return self.subscribers_count < other.subscribers_count
+
+    def __le__(self, other):
+        """Сравнивает «меньше или равно»"""
+        return self.subscribers_count <= other.subscribers_count
+
+    def __eq__(self, other):
+        """Определяет равенство"""
+        return self.subscribers_count == other.subscribers_count
+
     @property
     def channel_id(self):
         return self.__channel_id
@@ -74,4 +106,3 @@ class Channel:
         }
         with open(filename, 'w', encoding= 'UTF-8') as file:
             json.dump(data, file, indent=2, ensure_ascii=False)
-
