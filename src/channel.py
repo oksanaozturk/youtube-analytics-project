@@ -10,7 +10,7 @@ class Channel:
     api_key: str = os.getenv('YT_API_KEY')
 
     # создать специальный объект для работы с API
-    youtube = build('youtube', 'v3', developerKey=api_key)
+    # youtube = build('youtube', 'v3', developerKey=api_key)
 
     def __init__(self, channel_id: str) -> None:
         """
@@ -35,6 +35,10 @@ class Channel:
         self.subscribers_count: int = int(self.info_channel['items'][0]['statistics']['subscriberCount'])
         self.video_count: int = int(self.info_channel['items'][0]['statistics']['videoCount'])
         self.total_views: int = int(self.info_channel['items'][0]['statistics']['viewCount'])
+
+    @property
+    def channel_id(self):
+        return self.__channel_id
 
     def __str__(self):
         """Возвращает название и ссылку на канал по шаблону"""
@@ -68,29 +72,27 @@ class Channel:
         """Определяет равенство"""
         return self.subscribers_count == other.subscribers_count
 
-    @property
-    def channel_id(self):
-        return self.__channel_id
-
     @classmethod
     def dict_channel(cls, channel_id: str) -> dict:
         """
         создает словарь с данными по каналу
         :returns: Dictionary with info about the channel
         """
-        info_channel = cls.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
+        info_channel = cls.get_service().channels().list(id=channel_id, part='snippet,statistics').execute()
         return info_channel
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        channel = Channel.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        channel = Channel.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         info_channel_print = json.dumps(channel, indent=2, ensure_ascii=False)
         print(info_channel_print)
 
     @classmethod
     def get_service(cls):
         """Возвращает объект для работы с YouTube API"""
-        return cls.youtube
+        # api_key: str = os.getenv('YT_API_KEY')
+        youtube = build('youtube', 'v3', developerKey=cls.api_key)
+        return youtube
 
     def to_json(self, filename) -> None:
         """Метод, сохраняющий в файл значения атрибутов экземпляра Channel"""
