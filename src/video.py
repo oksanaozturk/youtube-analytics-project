@@ -24,14 +24,19 @@ class Video:
         self.video_id = video_id
         video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                     id=video_id).execute()
-        self.video_title: str = video_response['items'][0]['snippet']['title']
-        self.url_video = "https://youtu.be/" + self.video_id
-        self.view_count: int = video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = video_response['items'][0]['statistics']['likeCount']
+        try:
+            self.title: str = video_response['items'][0]['snippet']['title']
+            self.url_video = "https://youtu.be/" + self.video_id
+            self.view_count: int = video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = video_response['items'][0]['statistics']['likeCount']
+
+        except (IndexError, ValueError):
+            print(f"Передан некорректный {self.video_id}")
+            self.title = self.url = self.view_count = self.like_count = None
 
     def __str__(self):
         """Возвращает название видео"""
-        return f"{self.video_title}"
+        return f"{self.title}"
 
 
 class PLVideo(Video):
